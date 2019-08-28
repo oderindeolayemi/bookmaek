@@ -1,0 +1,40 @@
+CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          backgroundColor: kTabBarColor,
+          activeColor: kActiveTabBarIconColor,
+          inactiveColor: kInactiveTabBarIconColor,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home)
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search)
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.language)
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.library_books),
+              activeIcon: Icon(Icons.library_books)
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.email)
+            )
+          ]
+        ),
+        tabBuilder: (BuildContext context, int index){
+          if(index == 0){
+            return FeedsPage();
+          }else if(index == 1){
+            return ExplorePage();
+          }else if(index == 2){
+            return Browser(widget.model);
+          }else if(index == 3){
+            return Catalogue();
+          }else{
+            return Center(
+              child: Text('Page ' + '${index+1}'),
+            );
+          }
+        }
+      )

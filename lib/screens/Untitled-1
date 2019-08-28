@@ -1,0 +1,100 @@
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+class Browser extends StatefulWidget {
+  @override
+  _BrowserState createState() => _BrowserState();
+}
+
+class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin{
+   List<Scaffold> _pages = [];
+   PageController _pageController;
+   List<Color> _colors = [];
+
+  @override
+  void initState() {
+    _colors = [Colors.red, Colors.purple, Colors.pink, Colors.blue, Colors.green, Colors.green, Colors.teal, Colors.brown, Colors.black];
+    _pages = [
+      Scaffold(
+        body: Center(
+            child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
+            height: 550,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              color: Colors.red
+            ),
+          )
+        )
+      ),
+      Scaffold(
+        body: Center(
+            child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
+            height: 550,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              color: Colors.yellow
+            ),
+          )
+        )
+      )
+    ];
+
+    _pageController = PageController(
+      initialPage: 0,
+      keepPage: true,
+      viewportFraction: 0.9
+    );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    
+    
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add, color: Colors.pink,),
+            onPressed: (){
+              _pages.add(
+                Scaffold(
+                  body: Center(
+                      child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10.0),
+                      height: 550,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: _colors[Random().nextInt(_colors.length)]
+                      ),
+                    )
+                  )
+                )
+              );
+            },
+          )
+        ],
+      ),
+      body: PageView(
+        controller: _pageController,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (index){
+          Scaffold currentPage = _pages[index];
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context){
+              return currentPage;
+            }
+          ));
+          print(index);
+        },
+        children: _pages,
+      )
+    );
+  }
+}

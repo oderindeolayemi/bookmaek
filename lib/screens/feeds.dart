@@ -155,20 +155,20 @@ class _FeedsPageState extends State<FeedsPage> {
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: CustomScrollView(
               slivers: <Widget>[
-                SliverAppBar(
-                  // pinned: true,
-                  // snap: true,
-                  leading: Container(),
-                  floating: true,
-                  backgroundColor: (model.darkMode) ? Colors.black : Colors.white,
-                  flexibleSpace: IntroTitle(title: 'What\'s new'),
-                ),
-                // SliverList(
-                //   delegate: SliverChildListDelegate([
-                //     IntroTitle(title: 'What\'s new'),
-                //     SizedBox(height: 10.0),
-                //   ])
+                // SliverAppBar(
+                //   // pinned: true,
+                //   // snap: true,
+                //   leading: Container(),
+                //   floating: true,
+                //   backgroundColor: (model.darkMode) ? Colors.black : Colors.white,
+                //   flexibleSpace: IntroTitle(title: 'What\'s new'),
                 // ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    IntroTitle(title: 'What\'s new'),
+                    SizedBox(height: 10.0),
+                  ])
+                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index){

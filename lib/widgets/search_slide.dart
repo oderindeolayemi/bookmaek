@@ -23,14 +23,14 @@ class SearchSlide extends StatelessWidget {
                       height: 90.0,
                       width: 125.0,
                       decoration: BoxDecoration(
-                        color: kTabBarColor,
+                        color: (model.darkMode) ? Color(0xFF191919) : kCardColorDay,
                         borderRadius: BorderRadius.circular(15.0)
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(e),
+                          (model.darkMode) ? Text(e) : Text(e, style: TextStyle(color: Colors.black)),
                           kSmallHeight
                         ],
                       ),

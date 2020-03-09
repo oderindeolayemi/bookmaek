@@ -1,11 +1,14 @@
+import 'package:bookmaek/models/tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped_models/main.dart';
 import '../utilities/constants.dart';
 
 class AddressBar extends StatefulWidget {
-  final String url;
-  AddressBar(this.url);
+  final MainModel model;
+  final Tabs tab;
+  AddressBar(this.model, this.tab);
 
   @override
   _AddressBarState createState() => _AddressBarState();
@@ -16,9 +19,9 @@ class _AddressBarState extends State<AddressBar> {
   bool browseMode;
   
   @override
-  void initState() {
-    if(widget.url != null){
-      _browseStringController.text = widget.url;
+  void initState(){
+    if(widget.tab.url != null){
+      _browseStringController.text = widget.model.getCurrentUrl(widget.tab);
     }
     browseMode = false;
     super.initState();
@@ -36,9 +39,15 @@ class _AddressBarState extends State<AddressBar> {
     return ScopedModelDescendant<MainModel>(
       builder: (context, child, model){
         return Container(
-          color: kTabBarColor,
           padding: EdgeInsets.symmetric(vertical: 10.0),
-          margin: EdgeInsets.only(top: 40.0),
+          // margin: EdgeInsets.only(top: 10.0),
+          decoration: BoxDecoration(
+            color: (model.darkMode) ? Colors.black : Colors.white,
+            border: Border(
+              bottom: BorderSide(color: Colors.grey, width: 0.5)
+            ),
+            boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 1.0, blurRadius: 10.0)]
+          ),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -64,20 +73,26 @@ class _AddressBarState extends State<AddressBar> {
                     cursorColor: kActiveTabBarIconColor,
                     decoration: InputDecoration(
                       prefixIcon: (browseMode) ? IconButton(icon: Icon(Icons.cancel), onPressed: ()=> _cancelbrowse()) : Icon(Icons.home),
-                      suffixIcon: (browseMode) ? IconButton(icon: Icon(Icons.send), onPressed: (){}) : null,
+                      suffixIcon: (browseMode) ? IconButton(icon: Icon(Icons.send), onPressed: (){
+                        browseMode = false;
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        print(_browseStringController.text);
+                        model.goToPage('https://' + _browseStringController.text, widget.tab);
+                        // widget._webViewController.loadUrl('https://' + _browseStringController.text);
+                      }) : null,
                       hintText: 'Enter your address',
                       hintStyle: TextStyle(color: Colors.grey),
                       contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(color: Colors.blueGrey[800])
+                        borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(color: Colors.blueGrey[800])
+                        borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                       ),
                       filled: true,
-                      fillColor: Colors.blueGrey[800]
+                      fillColor: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1)
                     ),
                   )
                 )
@@ -86,6 +101,7 @@ class _AddressBarState extends State<AddressBar> {
                   child: GestureDetector(
                     onTap: (){
                       Navigator.pop(context, _browseStringController.text);
+                      // Navigator.push();
                     },
                     child: Container(
                       padding: EdgeInsets.all(10.0),

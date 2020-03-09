@@ -14,7 +14,7 @@ import './screens/register.dart';
 import './screens/home.dart';
 import './screens/comments.dart';
 import './screens/profile.dart';
-import './screens/browser.dart';
+import './screens/browserr.dart';
 
 void main()=> runApp(BookMaek());
 
@@ -55,7 +55,7 @@ class _BookMaekState extends State<BookMaek> {
         ) : ThemeData(
           scaffoldBackgroundColor: Colors.white,
           primaryColor: Colors.indigo,
-          cardColor: Color(0xFFf4f4f4),
+          cardColor: kCardColorDay,
           accentColor: kActiveTabBarIconColor,
           cardTheme: CardTheme(
             elevation: 10.0

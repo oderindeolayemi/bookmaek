@@ -3,6 +3,10 @@ import 'package:scoped_model/scoped_model.dart';
 import '../models/post.dart';
 
 mixin PostModel on Model{
+  // void deletePosts(int index){
+  //   _posts.removeAt(index);
+  //   notifyListeners();
+  // }
 
     void starPosts(int index){
       if(_posts[index].isStarred == false){

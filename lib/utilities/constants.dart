@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 //COLORS
-const Color kTabBarColor = Color(0xFF20242F);
+const Color kTabBarColor = Color(0xFF191919);
+const Color kCardColorDay = Color(0xFFf4f4f4);
 const Color kCardColor = Color(0xFF242A38);
 const Color kScaffoldBackgroundColor = Color(0xFF242A38);
 const Color kInactiveTabBarIconColor = Color(0xFF4F5A6C);

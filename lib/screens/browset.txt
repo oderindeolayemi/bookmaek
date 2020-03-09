@@ -42,9 +42,10 @@ class _RenderBrowserState extends State<RenderBrowser> {
             title: TextField(
               controller: _browseStringController,
               decoration: InputDecoration(
+                isDense: false,
                 prefixIcon: Container(
                   margin: EdgeInsets.only(right: 10.0),
-                  child: IconButton(icon: Icon(Icons.home, color: Colors.white), onPressed: (){
+                  child: IconButton(icon: Icon(Icons.home, color: Colors.white,), onPressed: (){
                     FocusScope.of(context).requestFocus(FocusNode());
                     model.goToPage('https://www.google.com/', widget._tab);
                   }),
@@ -67,22 +68,23 @@ class _RenderBrowserState extends State<RenderBrowser> {
                     )
                   ),
                 ),
-                suffixIcon: _isVisible ? null : IconButton(
-                  icon: Icon(Icons.cancel),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
                   onPressed: (){
-                    
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    model.goToPage(_browseStringController.text, widget._tab);
                   }
                 ),
                 hintText: 'Enter your address',
                   hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(color: (model.darkMode) ? Colors.grey: Colors.orange[900])
+                    borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(color: (model.darkMode) ? Colors.grey: Colors.orange[900])
+                    borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                   ),
                   filled: true,
                   fillColor: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1)
@@ -91,14 +93,11 @@ class _RenderBrowserState extends State<RenderBrowser> {
             actions: <Widget>[
               GestureDetector(
                 onTap: (){
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  model.goToPage(_browseStringController.text, widget._tab);
                   Navigator.pop(context, _browseStringController.text);
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
-                  margin: EdgeInsets.only(right: 15.0),
-                  child: Center(child: Icon(Icons.send)),
+                  child: Center(child: Icon(Icons.view_array)),
                   decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
@@ -115,15 +114,15 @@ class _RenderBrowserState extends State<RenderBrowser> {
                 )
               )
             ],
-            //bottom: (widget._tab.progress == 1.0) ? null : PreferredSize(
-              //child: LinearProgressIndicator(
-                //value: widget._tab.progress,
-                //backgroundColor: Colors.grey,
-              //),
-              //preferredSize: null
-            //)
+            bottom: (widget._tab.progress == 1.0) ? null : PreferredSize(
+              child: LinearProgressIndicator(
+                value: widget._tab.progress,
+                backgroundColor: Colors.grey,
+              ),
+              preferredSize: null
+            )
           ),
-          body: Container(color: Colors.white)
+          body: Container(color: Colors.blue)
         );
       },
     );

@@ -18,7 +18,7 @@ class IntroTitle extends StatelessWidget {
       builder: (context, child, model){
         return Container(
           padding: EdgeInsets.symmetric(vertical: 10.0),
-          margin: EdgeInsets.only(top: 30.0),
+          // margin: EdgeInsets.only(top: 30.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

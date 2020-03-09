@@ -32,7 +32,7 @@ class _SearchBarState extends State<SearchBar>{
     return ScopedModelDescendant<MainModel>(
       builder: (context, child, model){
         return Container(
-          margin: EdgeInsets.only(top: 40.0, bottom: 10.0),
+          margin: EdgeInsets.symmetric(vertical: 10.0),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -55,21 +55,21 @@ class _SearchBarState extends State<SearchBar>{
                     style: TextStyle(color: Colors.white),
                     cursorColor: kActiveTabBarIconColor,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.white),
-                      suffixIcon: (searchMode) ? IconButton(icon: Icon(Icons.cancel), onPressed: ()=> _cancelSearch()) : null,
+                      prefixIcon: Icon(Icons.search, color: (model.darkMode) ? Colors.white : Colors.black),
+                      suffixIcon: (searchMode) ? IconButton(icon: Icon(Icons.cancel, color: (model.darkMode) ? Colors.white : Colors.black), onPressed: ()=> _cancelSearch()) : null,
                       hintText: 'Search',
                       hintStyle: TextStyle(color: Colors.grey),
                       contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(color: Colors.blueGrey[800])
+                        borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(color: Colors.blueGrey[800])
+                        borderSide: BorderSide(color: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1))
                       ),
                       filled: true,
-                      fillColor: Colors.blueGrey[800]
+                      fillColor: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1)
                     ),
                   )
                 )

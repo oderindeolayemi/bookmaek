@@ -27,10 +27,11 @@ dependencies:
   font_awesome_flutter: ^8.4.0
   http: ^0.12.0+2
   image_picker: ^0.6.0+8
-  flutter_inappbrowser: ^1.2.1
   curved_navigation_bar: ^0.2.20
   shared_preferences: ^0.5.3+4
   animated_splash: ^1.0.0
+  webview_flutter: ^0.3.14+1
+  flutter_inappwebview: ^2.1.0+1
   # camera: ^0.5.2+1
   # firebase_core: ^0.4.0+3
   # firebase_auth: ^0.11.1+5

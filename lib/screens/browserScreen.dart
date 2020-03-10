@@ -27,7 +27,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
         return Future.value(false);
       },
       child: Scaffold(
-        body: (widget.model.tabs.length == 0) ? Text('No active tabs') : RenderBrowser(widget.model.tabs[0]),
+        body: (widget.model.tabs.length == 0) ? Text('No active tabs') : RenderBrowser(widget.model.tabs, widget.model.activeTab),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
             widget.switchBack();
@@ -53,8 +53,10 @@ class _BrowserScreenState extends State<BrowserScreen> {
           onTap: (index){
             if(index == 0){
               print('go back');
+              widget.model.goBack(widget.model.tabs[widget.model.activeTab]);
             }else if(index == 1){
               print('go forward');
+              widget.model.goForward(widget.model.tabs[widget.model.activeTab]);
             }else if(index == 2){
               print('open menu');
               showModalBottomSheet(
@@ -72,41 +74,45 @@ class _BrowserScreenState extends State<BrowserScreen> {
                 }
               );
             }else if(index == 3){
-              print('show tabs');
+              //print('show tabs');
               showModalBottomSheet(
                 enableDrag: true,
                 backgroundColor: Colors.transparent,
                 context: context, 
-                builder: (context){
+                builder: (BuildContext context){
                   return Stack(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 5.0),
-                        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0)
-                        ),
-                        child: widget.model.tabs.length == 0 ? null: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 6,
-                          itemBuilder: (context, index){
-                            return Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                leading: Icon(Icons.language),
-                                title: Text((index+1).toString()),
-                                trailing: Icon(Icons.close, color: Colors.black),
-                                onTap: (){
-                                  Navigator.pop(context);
-                                },
-                              )
-                            );
-                          },
-                        ),
+                    children: <Widget> [
+                      LimitedBox(
+                        child : Container(
+                          padding: EdgeInsets.symmetric(vertical: 5.0),
+                          margin: EdgeInsets.only(bottom: 75.0, left: 5.0, right: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0)
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: widget.model.tabs.length,
+                            itemBuilder: (BuildContext context, int index){
+                              return Card(
+                                color: Colors.white,
+                                child: ListTile(
+                                  leading: Icon(Icons.language),
+                                  title: Text((widget.model.tabs[index].title == null) ? 'New tab' : widget.model.tabs[index].title),
+                                  subtitle: Text((widget.model.tabs[index].url == '') ? '' : widget.model.tabs[index].url),
+                                  trailing: Icon(Icons.close, color: Colors.black),
+                                  onTap: (){
+                                    Navigator.pop(context);
+                                    widget.model.switchTabs(index);
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder:(BuildContext context) => BrowserScreen(widget.switchBack, widget.model)));
+                                  },
+                                )
+                              );
+                            },
+                          )
+                        )
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
+                      Positioned(
                         child: GestureDetector(
                           onTap: (){},
                           child: Container(
@@ -118,7 +124,9 @@ class _BrowserScreenState extends State<BrowserScreen> {
                               color: Colors.white
                             )
                           )
-                        )
+                        ),
+                        bottom: 2.0,
+                        right: 5.0
                       )
                     ]
                   );

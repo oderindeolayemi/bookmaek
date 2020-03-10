@@ -128,3 +128,36 @@ class _RenderBrowserState extends State<RenderBrowser> {
     );
   }
 }
+
+
+Container(
+  padding: EdgeInsets.symmetric(vertical: 5.0),
+  //margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(10.0)
+  ),
+  child: widget.model.tabs.length == 0 ? null: Column(
+    children : <Widget>[
+      Expanded(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.model.tabs.length,
+          itemBuilder: (BuildContext context, int index){
+            return Card(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(Icons.language),
+                title: Text((index+1).toString()),
+                trailing: Icon(Icons.close, color: Colors.black),
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              )
+            );
+          },
+        )
+      )
+    ]
+  ),
+),

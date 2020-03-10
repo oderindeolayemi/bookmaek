@@ -1,11 +1,13 @@
 import 'package:bookmaek/models/tab.dart';
 import 'package:bookmaek/scoped_models/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class RenderBrowser extends StatefulWidget {
-  final Tabs _tab;
-  RenderBrowser(this._tab);
+  final List<Tabs> _tabs;
+  final int _currentTabIndex;
+  RenderBrowser(this._tabs, this._currentTabIndex);
   @override
   _RenderBrowserState createState() => _RenderBrowserState();
 }
@@ -17,7 +19,7 @@ class _RenderBrowserState extends State<RenderBrowser> {
   @override
   void initState() {
     _isVisible = false;
-    print(widget._tab.url);
+    print(widget._tabs[widget._currentTabIndex].url);
     super.initState();
   }
 
@@ -36,6 +38,7 @@ class _RenderBrowserState extends State<RenderBrowser> {
     return ScopedModelDescendant<MainModel>(
       builder: (context, child, model){
         return Scaffold(
+          resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
@@ -46,7 +49,7 @@ class _RenderBrowserState extends State<RenderBrowser> {
                   margin: EdgeInsets.only(right: 10.0),
                   child: IconButton(icon: Icon(Icons.home, color: Colors.white), onPressed: (){
                     FocusScope.of(context).requestFocus(FocusNode());
-                    model.goToPage('https://www.google.com/', widget._tab);
+                    model.goToPage('https://www.google.com/', widget._tabs[widget._currentTabIndex]);
                   }),
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -67,22 +70,22 @@ class _RenderBrowserState extends State<RenderBrowser> {
                     )
                   ),
                 ),
-                suffixIcon: _isVisible ? null : IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: (){
-                    
-                  }
-                ),
+                //suffixIcon: _isVisible ? null : IconButton(
+                //icon: Icon(Icons.cancel),
+                //onPressed: (){
+                //  
+                //  }
+                //),
                 hintText: 'Enter your address',
                   hintStyle: TextStyle(color: Colors.grey),
                   contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(color: (model.darkMode) ? Colors.grey: Colors.orange[900])
+                    borderSide: BorderSide(color: Color(0xFFc1c1c1))
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(color: (model.darkMode) ? Colors.grey: Colors.orange[900])
+                    borderSide: BorderSide(color: Color(0xFFc1c1c1))
                   ),
                   filled: true,
                   fillColor: (model.darkMode) ? Color(0xFF191919): Color(0xFFc1c1c1)
@@ -92,8 +95,7 @@ class _RenderBrowserState extends State<RenderBrowser> {
               GestureDetector(
                 onTap: (){
                   FocusScope.of(context).requestFocus(FocusNode());
-                  model.goToPage(_browseStringController.text, widget._tab);
-                  Navigator.pop(context, _browseStringController.text);
+                  model.goToPage(_browseStringController.text, widget._tabs[widget._currentTabIndex]);
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
@@ -115,15 +117,51 @@ class _RenderBrowserState extends State<RenderBrowser> {
                 )
               )
             ],
-            //bottom: (widget._tab.progress == 1.0) ? null : PreferredSize(
+            //bottom: (widget._tabs.progress == 1.0) ? null : PreferredSize(
               //child: LinearProgressIndicator(
-                //value: widget._tab.progress,
+                //value: widget._tabs.progress,
                 //backgroundColor: Colors.grey,
               //),
               //preferredSize: null
             //)
           ),
-          body: Container(color: Colors.white)
+          body: GestureDetector(
+            onTap: (){
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+              changeVisibility();
+            },
+            child: InAppWebView(
+              initialUrl: (widget._tabs[widget._currentTabIndex].url != '') ? widget._tabs[widget._currentTabIndex].url : 'https://google.com',
+              initialHeaders: {},
+              initialOptions: InAppWebViewWidgetOptions(
+                inAppWebViewOptions: InAppWebViewOptions(
+                    debuggingEnabled: true,
+                )
+              ),
+              onWebViewCreated: (InAppWebViewController controller) {
+                widget._tabs[widget._currentTabIndex].controller = controller;
+              },
+              onLoadStart: (InAppWebViewController controller, String url) async {
+                _browseStringController.text = url;
+                model.setTabDetails(widget._currentTabIndex, url, 'Loading');
+              },
+              onLoadStop: (InAppWebViewController controller, String url) async {
+                _browseStringController.text = url;
+                String pageTitle = await model.fetchPageTitle(controller);
+                model.setTabDetails(widget._currentTabIndex, url, pageTitle);
+                //String getUrl = await controller.getUrl();
+                //model.setTabUrl(widget.index, getUrl);
+              },
+              onProgressChanged: (InAppWebViewController controller, int progress) {
+                print(progress / 100);
+                model.updateProgress(progress / 100, widget._tabs[widget._currentTabIndex]);
+                //model.updateProgress(widget.index, progress / 100);
+              },
+            )
+          ),
         );
       },
     );
